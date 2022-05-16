@@ -6,6 +6,8 @@ COPY ./requirements/backend.in /app/requirements/backend.in
 
 RUN python3 -m venv ./.venv
 
+RUN . ./.venv/bin/activate
+
 RUN pip install --no-cache-dir -r requirements/backend.in
 
 COPY . .
