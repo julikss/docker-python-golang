@@ -1,4 +1,6 @@
-FROM golang:1.18.2-buster
+# first stage
+
+FROM golang:1.18.2-buster as build
 
 WORKDIR /app
 
@@ -8,8 +10,14 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o build/fizzbuzz
+RUN CGO_ENABLED=0 go build -o build/fizzbuzz
+
+# second stage
+
+FROM scratch
+
+COPY --from=build /app/build/fizzbuzz /app/fizzbuzz
 
 EXPOSE 8080
 
-CMD ["./build/fizzbuzz", "serve"]
+CMD ["/app/fizzbuzz"]
